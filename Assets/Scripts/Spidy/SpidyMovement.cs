@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -19,6 +20,7 @@ public class SpidyMovement : MonoBehaviour
     [SerializeField] private SpidyJump _spidyJump;
     [SerializeField] private float _maxRelativeJumpForce;
     [SerializeField] private Transform _netCheckRay;
+    [SerializeField] private TMP_Text _jumoForceText;
     private float _startMouseX;
     private float _startMouseY;
     private float _startSpidyX;
@@ -49,7 +51,8 @@ public class SpidyMovement : MonoBehaviour
             _state = State.fly;
 
             var _endMouseY = _cam.ScreenToWorldPoint(Input.mousePosition).y;
-            var relativeJumpForce = Mathf.Clamp(_startMouseY - _endMouseY, 0, _maxRelativeJumpForce);
+            var relativeJumpForce = Mathf.Clamp(_startMouseY - _endMouseY, 0, _maxRelativeJumpForce)/2;
+            _jumoForceText.text = relativeJumpForce.ToString();
             _spidyJump.Jump(relativeJumpForce);
         }
 
