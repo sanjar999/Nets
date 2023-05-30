@@ -19,7 +19,7 @@ public class SpidyJump : MonoBehaviour
     public void Jump(float relativeForce)
     {
         _rb.AddForce(Vector3.up * _jumpForce * relativeForce, ForceMode.Impulse);
-        Physics.gravity = new Vector3(0,-9.8f,0);
+        Physics.gravity = new Vector3(0,-4.8f,0);
 
     }
 

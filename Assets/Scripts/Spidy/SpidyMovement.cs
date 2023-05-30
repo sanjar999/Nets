@@ -19,7 +19,8 @@ public class SpidyMovement : MonoBehaviour
     [SerializeField] private Vector2 _xMovementRange = new Vector2(-2, 2);
     [SerializeField] private SpidyJump _spidyJump;
     [SerializeField] private float _maxRelativeJumpForce;
-    [SerializeField] private Transform _netCheckRay;
+    [SerializeField] private Transform _netCheckRayUp;
+    [SerializeField] private Transform _netCheckRayDown;
     [SerializeField] private TMP_Text _jumoForceText;
     private float _startMouseX;
     private float _startMouseY;
@@ -51,12 +52,12 @@ public class SpidyMovement : MonoBehaviour
             _state = State.fly;
 
             var _endMouseY = _cam.ScreenToWorldPoint(Input.mousePosition).y;
-            var relativeJumpForce = Mathf.Clamp(_startMouseY - _endMouseY, 0, _maxRelativeJumpForce)/2;
+            var relativeJumpForce = Mathf.Clamp(_startMouseY - _endMouseY, 0, _maxRelativeJumpForce);
             _jumoForceText.text = relativeJumpForce.ToString();
             _spidyJump.Jump(relativeJumpForce);
         }
 
-        if (Input.GetMouseButton(0) && _state == State.hang)
+        if (Input.GetMouseButton(0))
         {
             var pos = _spidy.position;
             var touchPos = _cam.ScreenToWorldPoint(Input.mousePosition);
@@ -83,11 +84,9 @@ public class SpidyMovement : MonoBehaviour
 
     private void CheckDeath()
     {
-        
-        print("call");
-        RaycastHit hit;
-        if (Physics.Raycast(_netCheckRay.position, _netCheckRay.forward, out hit, 10f) &&
-            hit.collider.CompareTag("net"))
+        Physics.Raycast(_netCheckRayDown.position, _netCheckRayDown.forward, out RaycastHit hit, 10f);
+        Physics.Raycast(_netCheckRayUp.position, _netCheckRayUp.forward, out RaycastHit hit1, 10f);
+        if ((hit.collider && hit.collider.CompareTag("net")) ||  ( hit1.collider && hit1.collider.CompareTag("net")))
         {
             _state = State.idle;
             _spidyJump.HangOn();
