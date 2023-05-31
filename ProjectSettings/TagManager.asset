@@ -6,6 +6,8 @@ TagManager:
   tags:
   - net
   - death
+  - booster
+  - death_hole
   layers:
   - Default
   - TransparentFX

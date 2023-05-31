@@ -37,9 +37,10 @@ public class SpidyMovement : MonoBehaviour
 
     private void Update()
     {
-        if (Input.GetMouseButtonDown(0) && _state == State.idle)
+        if (Input.GetMouseButtonDown(0))
         {
-            _state = State.hang;
+            if (_state != State.fly)
+                _state = State.hang;
 
             var mP = _cam.ScreenToWorldPoint(Input.mousePosition);
             _startMouseX = mP.x;
@@ -52,7 +53,7 @@ public class SpidyMovement : MonoBehaviour
             _state = State.fly;
 
             var _endMouseY = _cam.ScreenToWorldPoint(Input.mousePosition).y;
-            var relativeJumpForce = Mathf.Clamp(_startMouseY - _endMouseY, 0, _maxRelativeJumpForce);
+            var relativeJumpForce = Mathf.Clamp(_startMouseY - _endMouseY, 0, _maxRelativeJumpForce)*1.5f;
             _jumoForceText.text = relativeJumpForce.ToString();
             _spidyJump.Jump(relativeJumpForce);
         }
@@ -80,13 +81,14 @@ public class SpidyMovement : MonoBehaviour
             _isChecking = true;
             CheckDeath();
         }
+
     }
 
     private void CheckDeath()
     {
         Physics.Raycast(_netCheckRayDown.position, _netCheckRayDown.forward, out RaycastHit hit, 10f);
         Physics.Raycast(_netCheckRayUp.position, _netCheckRayUp.forward, out RaycastHit hit1, 10f);
-        if ((hit.collider && hit.collider.CompareTag("net")) ||  ( hit1.collider && hit1.collider.CompareTag("net")))
+        if ((hit.collider && hit.collider.CompareTag("net")) || (hit1.collider && hit1.collider.CompareTag("net")))
         {
             _state = State.idle;
             _spidyJump.HangOn();
@@ -96,6 +98,7 @@ public class SpidyMovement : MonoBehaviour
             _spidyJump.FallForward();
             StartCoroutine(FooCo());
         }
+
         _isChecking = false;
     }
 
